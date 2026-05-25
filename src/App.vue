@@ -11,6 +11,7 @@ const formData = ref<Record<string, string | boolean>>({});
 const handleSubmit = () => {
   console.log(JSON.stringify(formData.value, null, 2));
   formData.value = {};
+  
   openPopup();
 };
 
