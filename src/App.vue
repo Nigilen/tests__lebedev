@@ -51,7 +51,6 @@ const closePopup = () => {
 </template>
 
 <style scoped>
-
 .form-data {
   inline-size: clamp(300px, 90vi, 400px);
   display: flex;
