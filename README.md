@@ -2,6 +2,8 @@
 
 Vue-приложение с динамической генерацией формы по JSON-конфигу.
 
+[Деплой](https://nigilen.github.io/tests__lebedev/)
+
 ## Возможности
 
 - Генерация полей из `src/data.json` (text, email, password, select, checkbox)
