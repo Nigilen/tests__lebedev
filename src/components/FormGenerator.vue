@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { reactive, ref } from 'vue';
 
 const props = defineProps<{
   fields: {
@@ -23,10 +24,43 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
   }
 );
 
+const formRef = ref<HTMLFormElement | null>(null);
+const errors = reactive<Record<string, string>>({});
+const attemptedSubmit = ref(false);
+
+const validateField = (model: string) => {
+  const el = formRef.value?.elements.namedItem(model) as HTMLInputElement | HTMLSelectElement | null;
+  if (!el) return;
+  if (el.validity.valid) {
+    delete errors[model];
+    return;
+  } 
+  if (attemptedSubmit.value) {
+    errors[model] = el.validationMessage
+  }
+}
+
+const validateForm = () => {
+  props.fields.forEach((field) => validateField(field.model));
+}
+
+const onFieldInput = (model: string) => {
+  validateField(model)
+}
+
+const onSubmit = () => {
+  attemptedSubmit.value = true;
+  validateForm();
+  if (!formRef.value?.checkValidity()) {
+    return;
+  }
+  emit('submit');
+}
+
 </script>
 
 <template>
-  <form class="form" action="" @submit.prevent="emit('submit')">
+  <form ref="formRef" novalidate class="form" action="" @submit.prevent="onSubmit">
 
     <label 
       v-for="field in fields"
@@ -42,7 +76,12 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
         :name="field.model" 
         :required="field.required"
         v-model="formData[field.model]"
+        @change="onFieldInput(field.model)"
+
       >
+        <option value="" disabled selected>
+          Выберите {{ field.label.toLowerCase() }}
+        </option>
         <option class="form__option" v-for="option in field.options" :value="option" >
           {{ option }}
         </option>
@@ -57,7 +96,11 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
         :required="field.required"
         :pattern="field.pattern"
         v-model="formData[field.model]"
+        @input="onFieldInput(field.model)"
       />
+      <span v-if="errors[field.model]" class="form__input-error">
+        {{ errors[field.model] }}
+      </span>
     </label>
     <button class="form__button" type="submit">Отправить</button>
   </form>
@@ -68,7 +111,7 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
 .form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1.5rem;
   inline-size: clamp(300px, 90vi, 400px);
   border: 1px solid rgba(0, 0, 0, .1);
   border-radius: 4px;
@@ -76,21 +119,25 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
 }
 
 .form__label {
-  display: flex;
+  position: relative;
+  display: grid;
+  grid-template-columns: 2fr 7fr;
   align-items: center;
   column-gap: 8px;
   inline-size: 100%;
 }
 
-.form__label-text:not(.form__label-text--checkbox) {
-  flex-basis: 20%;
-}
-
 .form__input {
-  padding-block: 12px;
+  background-color: transparent;
+  padding-block: 6px;
   inline-size: 100%;
   border: none;
   border-block-end: 1px solid rgba(0, 0, 0, .1);
+  transition: border-block-end 0.3s ease-in-out;
+}
+
+.form__input:focus {
+  border-block-end: 1px solid rgba(0, 0, 0, .8);
 }
 
 .form__input--checkbox {
@@ -103,7 +150,6 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
 }
 
 .form__label--checkbox {
-  inline-size: 100%;
   gap: 1rem;
   grid-template-columns: auto 1fr;
 }
@@ -118,10 +164,14 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
   -moz-appearance: none;
   appearance: none;
   border-radius: 0;
+  background-color: transparent;
+  transition: border-block-end 0.3s ease-in-out;
 }
 
 .form__select:focus {
   outline: none;
+  border-block-end: 1px solid rgba(0, 0, 0, .8);
+
 }
 
 .form__button {
@@ -130,5 +180,15 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
   color: #d3d3d3;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.form__input-error {
+  position: absolute;
+  grid-column: 2 / -1;
+  grid-row: 2;
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  color: #e72424;
+  font-size: 10px;
 }
 </style>
