@@ -155,6 +155,7 @@ const onSubmit = () => {
 }
 
 .form__select {
+  position: relative;
   inline-size: 100%;
   font: inherit;
   padding-block: 12px;
@@ -166,12 +167,24 @@ const onSubmit = () => {
   border-radius: 0;
   background-color: transparent;
   transition: border-block-end 0.3s ease-in-out;
+  z-index: 1;
+}
+
+.form__label--select::after {
+  content: '';
+  display: block;
+  position: absolute;
+  inset-inline-end: 12px;
+  margin-block: auto;
+  inline-size: 10px;
+  block-size: 10px;
+  background-color: #181818;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
 }
 
 .form__select:focus {
   outline: none;
   border-block-end: 1px solid rgba(0, 0, 0, .8);
-
 }
 
 .form__button {
