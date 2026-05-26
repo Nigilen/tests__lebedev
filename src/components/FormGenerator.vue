@@ -32,35 +32,34 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
       v-for="field in fields"
       :class="['form__label', `form__label--${field.type}`]" 
       :for="field.model">
-      <select 
-      v-if="field.type === 'select'" 
-      class="form__select" 
-      :id="field.model" 
-      :name="field.model" 
-      :required="field.required"
-      v-model="formData[field.model]"
-      >
-      <option value="" disabled selected hidden> </option>
-      <option class="form__option" v-for="option in field.options" :value="option" >
-        {{ option }}
-      </option>
-    </select>
-    
-    <input v-else 
-      :class="['form__input', `form__input--${field.type}`]" 
-      :type="field.type" 
-      :id="field.model" 
-      :name="field.model" 
-      :minlength="field.minLength"
-      :maxlength="field.maxLength"
-      :required="field.required"
-      :pattern="field.pattern"
-      :placeholder="field.label"
-      v-model="formData[field.model]"
-    />
       <span :class="['form__label-text', `form__label-text--${field.type}`]">
         {{ field.label }}
       </span>
+      <select 
+        v-if="field.type === 'select'" 
+        class="form__select" 
+        :id="field.model" 
+        :name="field.model" 
+        :required="field.required"
+        v-model="formData[field.model]"
+      >
+        <option class="form__option" v-for="option in field.options" :value="option" >
+          {{ option }}
+        </option>
+      </select>
+      
+      <input v-else 
+        :class="['form__input', `form__input--${field.type}`]" 
+        :type="field.type" 
+        :id="field.model" 
+        :name="field.model" 
+        :minlength="field.minLength"
+        :maxlength="field.maxLength"
+        :required="field.required"
+        :pattern="field.pattern"
+        v-model="formData[field.model]"
+      />
+
     </label>
 
     <button type="submit" class="form__button">Отправить</button>
@@ -81,11 +80,14 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
 }
 
 .form__label {
-  position: relative;
   display: flex;
   align-items: center;
   column-gap: 8px;
   inline-size: 100%;
+}
+
+.form__label-text:not(.form__label-text--checkbox) {
+  flex-basis: 20%;
 }
 
 .form__input {
@@ -95,12 +97,10 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
   border-block-end: 1px solid rgba(0, 0, 0, .1);
 }
 
+
+
 .form__input--checkbox {
   inline-size: max-content;
-}
-
-.form__label-text:not(.form__label-text--checkbox) {
-  position: absolute;
 }
 
 .form__label-text--checkbox {
@@ -116,10 +116,18 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
 
 .form__select {
   inline-size: 100%;
-  font-family: inherit;
+  font: inherit;
   padding-block: 12px;
   border: none;
   border-block-end: 1px solid rgba(0, 0, 0, .1);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+.form__select:focus {
+  outline: none;
 }
 
 .form__button {
@@ -128,42 +136,6 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
   color: #d3d3d3;
   border-radius: 4px;
   cursor: pointer;
-}
-
-.form__input:focus + .form__label-text:not(.form__label-text--checkbox) {
-  transform: translateY(-100%) scale(0.9);
-}
-
-.form__input:not(:placeholder-shown) + .form__label-text:not(.form__label-text--checkbox) {
-  transform: translateY(-100%) scale(0.9);
-}
-
-.form__input::placeholder {
-  color: transparent;
-}
-
-.form__input:focus + .form__input:placeholder {
-  color: transparent;
-}
-
-.form__input-select:focus + .form__label-text {
-  transform: translateY(-100%) scale(0.9);
-}
-
-.form__select:focus {
-  outline: none;
-}
-
-.form__select:focus + .form__label-text:not(.form__label-text--checkbox) {
-  transform: translateY(-100%) scale(0.9);
-}
-
-.form__select:valid + .form__label-text:not(.form__label-text--checkbox) {
-  transform: translateY(-100%) scale(0.9);
-}
-
-.form__label-text {
-  transition: transform 0.3s ease;
 }
 
 </style>
