@@ -73,21 +73,13 @@ const emit = defineEmits<{
 }
 
 .popup-enter-from,
-
 .popup-leave-to {
   opacity: 0;
 }
 
-.popup-enter-to {
+.popup-enter-to,
+.popup-leave-from {
   opacity: 1;
-}
-
-.popup-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.popup-leave-to {
-  opacity: 0;
 }
 
 </style>

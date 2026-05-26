@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import FormGenerator from './components/FormGenerator.vue';
-import AppPopup from './components/AppPopup.vue';
-import data from './data.json';
+import FormGenerator from '@/components/FormGenerator.vue';
+import AppPopup from '@/components/AppPopup.vue';
+import data from '@/data.json';
 
 const fields = data.fields;
 

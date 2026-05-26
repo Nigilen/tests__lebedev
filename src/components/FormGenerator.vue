@@ -47,7 +47,6 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
           {{ option }}
         </option>
       </select>
-      
       <input v-else 
         :class="['form__input', `form__input--${field.type}`]" 
         :type="field.type" 
@@ -59,10 +58,8 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
         :pattern="field.pattern"
         v-model="formData[field.model]"
       />
-
     </label>
-
-    <button type="submit" class="form__button">Отправить</button>
+    <button class="form__button" type="submit">Отправить</button>
   </form>
 </template>
 
@@ -72,7 +69,6 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
   display: flex;
   flex-direction: column;
   gap: 16px;
-
   inline-size: clamp(300px, 90vi, 400px);
   border: 1px solid rgba(0, 0, 0, .1);
   border-radius: 4px;
@@ -96,8 +92,6 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
   border: none;
   border-block-end: 1px solid rgba(0, 0, 0, .1);
 }
-
-
 
 .form__input--checkbox {
   inline-size: max-content;
@@ -137,5 +131,4 @@ const formData = defineModel<Record<string, string | boolean>>('formData',
   border-radius: 4px;
   cursor: pointer;
 }
-
 </style>
